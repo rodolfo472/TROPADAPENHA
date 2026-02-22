@@ -2,27 +2,29 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RodoBank</title>
+<title>Banco dos Cria</title>
 
 <style>
 *{box-sizing:border-box;}
 body{
 margin:0;
 font-family:Arial, sans-serif;
-background:#f2f2f2;
+background:#f1f5f9;
 }
 
 .top{
-background:#820ad1;
+background:#0a4fff;
 color:white;
 padding:20px;
 font-size:22px;
 font-weight:bold;
-text-align:center;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 .container{
-max-width:600px;
+max-width:500px;
 margin:auto;
 padding:15px;
 }
@@ -30,50 +32,61 @@ padding:15px;
 .card{
 background:white;
 padding:20px;
-border-radius:15px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+border-radius:20px;
+box-shadow:0 6px 15px rgba(0,0,0,0.1);
 margin-bottom:15px;
 }
 
-input,button{
-width:100%;
-padding:12px;
+.saldo{
+font-size:28px;
+font-weight:bold;
 margin-top:10px;
-border-radius:10px;
-border:1px solid #ddd;
-font-size:16px;
 }
 
-button{
-background:#820ad1;
-color:white;
+.actions{
+display:flex;
+justify-content:space-between;
+margin-top:15px;
+}
+
+.action-btn{
+flex:1;
+margin:5px;
+padding:12px;
+border-radius:15px;
 border:none;
+background:#0a4fff;
+color:white;
 font-weight:bold;
 }
 
-button:active{opacity:0.8;}
-
-.hidden{display:none;}
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:12px;
+border:1px solid #ddd;
+}
 
 .virtual-card{
-background:linear-gradient(45deg,#5a00a0,#a020f0);
+background:linear-gradient(135deg,#0044ff,#0088ff);
 color:white;
 padding:20px;
 border-radius:20px;
 margin-top:10px;
 }
 
-@media(min-width:900px){
-.container{
-margin-top:40px;
-}
-}
+.hidden{display:none;}
+
 </style>
 </head>
 
 <body>
 
-<div class="top">💜 RodoBank</div>
+<div class="top">
+<span>🔵 Banco dos Cria</span>
+<span onclick="logout()" style="cursor:pointer;">Sair</span>
+</div>
 
 <div class="container">
 
@@ -83,8 +96,8 @@ margin-top:40px;
 <h3>Entrar ou Criar Conta</h3>
 <input id="user" placeholder="Usuário">
 <input id="pass" type="password" placeholder="Senha">
-<button onclick="register()">Cadastrar</button>
-<button onclick="login()">Entrar</button>
+<button class="action-btn" onclick="register()">Cadastrar</button>
+<button class="action-btn" onclick="login()">Entrar</button>
 </div>
 </div>
 
@@ -92,27 +105,27 @@ margin-top:40px;
 <div id="appScreen" class="hidden">
 
 <div class="card">
-<h3>Saldo</h3>
-<h2 id="saldo"></h2>
-<button onclick="toggleSaldo()">Mostrar/Esconder</button>
+<h4>Conta</h4>
+<div class="saldo" id="saldo"></div>
+<div class="actions">
+<button class="action-btn" onclick="toggleSaldo()">👁️</button>
+<button class="action-btn" onclick="receber()">+ Receber</button>
+<button class="action-btn" onclick="enviar()">- Enviar</button>
+</div>
+<input id="valor" type="number" placeholder="Digite o valor">
 </div>
 
 <div class="card">
-<h3>Transferência</h3>
-<input id="valor" type="number" placeholder="Valor">
-<button onclick="enviar()">Enviar</button>
-<button onclick="receber()">Receber</button>
-</div>
-
-<div class="card">
-<h3>Caixinha</h3>
+<h4>Caixinha</h4>
 <p>Guardado: R$ <span id="caixa"></span></p>
-<button onclick="guardar()">Guardar 50</button>
-<button onclick="retirar()">Retirar 50</button>
+<div class="actions">
+<button class="action-btn" onclick="guardar()">Guardar 50</button>
+<button class="action-btn" onclick="retirar()">Retirar 50</button>
+</div>
 </div>
 
 <div class="card">
-<h3>Cartão Virtual</h3>
+<h4>Cartão Virtual</h4>
 <div class="virtual-card">
 <p id="cardNumber"></p>
 <p id="cardVal"></p>
@@ -121,17 +134,8 @@ margin-top:40px;
 </div>
 
 <div class="card">
-<h3>Histórico</h3>
+<h4>Histórico</h4>
 <div id="historico"></div>
-</div>
-
-<div class="card">
-<h3>Ranking de Usuários</h3>
-<div id="ranking"></div>
-</div>
-
-<button onclick="logout()">Sair</button>
-
 </div>
 
 </div>
@@ -154,7 +158,6 @@ let p=pass.value;
 let data=getData();
 
 if(!u||!p){alert("Preencha tudo!");return;}
-
 if(data[u]){alert("Usuário já existe!");return;}
 
 data[u]={
@@ -163,7 +166,7 @@ saldo:1000,
 caixa:0,
 historico:[],
 card:{
-number:generateCard(),
+number:"4000 "+Math.floor(Math.random()*9000+1000)+" "+Math.floor(Math.random()*9000+1000)+" "+Math.floor(Math.random()*9000+1000),
 val:"12/30",
 cvv:Math.floor(Math.random()*900+100)
 }
@@ -204,11 +207,6 @@ cardVal.innerText="Validade: "+user.card.val;
 cardCVV.innerText="CVV: "+user.card.cvv;
 
 historico.innerHTML=user.historico.map(h=>"<p>"+h+"</p>").join("");
-
-ranking.innerHTML=Object.keys(data)
-.sort((a,b)=>data[b].saldo-data[a].saldo)
-.map(name=>"<p>"+name+" - R$ "+data[name].saldo.toFixed(2)+"</p>")
-.join("");
 }
 
 function enviar(){
@@ -262,10 +260,6 @@ update();
 function toggleSaldo(){
 hide=!hide;
 update();
-}
-
-function generateCard(){
-return "4"+Math.floor(Math.random()*1000000000000000);
 }
 </script>
 
