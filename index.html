@@ -17,47 +17,29 @@ body{
   background:#f1f5f9;
 }
 
-/* TOPO FIXO */
+/* TELAS */
+.tela{ display:none; }
+.tela.ativa{ display:block; }
+
+/* TOPO */
 .topo{
-  height:380px;
+  height:360px;
   background: linear-gradient(180deg, #0f4cff, #2a6bff);
   color:white;
   padding:25px;
 }
 
-.menu{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+.nome{ margin-top:40px; font-size:18px; }
+.saldo{ font-size:32px; font-weight:bold; margin-top:10px; }
 
-.avatar{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:white;
-}
-
-.nome{
-  margin-top:40px;
-  font-size:18px;
-}
-
-.saldo{
-  font-size:32px;
-  font-weight:bold;
-  margin-top:10px;
-}
-
-/* CONTAINER BRANCO */
+/* CONTEUDO */
 .conteudo{
   background:white;
   margin-top:-120px;
   border-top-left-radius:30px;
   border-top-right-radius:30px;
-  padding:25px 20px 40px 20px;
+  padding:25px;
   min-height:100vh;
-  box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
 }
 
 /* BOTÕES */
@@ -70,6 +52,7 @@ body{
 .botao{
   text-align:center;
   font-size:13px;
+  cursor:pointer;
 }
 
 .botao-circulo{
@@ -92,78 +75,219 @@ body{
   margin-bottom:15px;
 }
 
-.card h3{
+/* TRANSFERIR */
+.transferir-container{
+  padding:25px;
+}
+
+.titulo{
+  font-size:22px;
+  margin-bottom:20px;
+}
+
+input{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-bottom:2px solid #ccc;
   font-size:16px;
-  margin-bottom:6px;
+  outline:none;
 }
 
-.desc{
-  font-size:13px;
-  color:#555;
+/* BOTÃO FLUTUANTE */
+.fab{
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  width:65px;
+  height:65px;
+  background:#0f4cff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:26px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.3);
+  cursor:pointer;
 }
 
+/* TECLADO */
+.teclado{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#f1f1f1;
+  padding:10px;
+}
+
+.teclado button{
+  padding:18px;
+  font-size:18px;
+}
 </style>
 </head>
 <body>
 
-<div class="topo">
-  <div class="menu">
-    <div>☰</div>
-    <div></div>
-    <div class="avatar"></div>
+<!-- HOME -->
+<div id="home" class="tela ativa">
+
+  <div class="topo">
+    <div class="nome">Olá, Rodolfo</div>
+    <div class="saldo" id="saldoDisplay">R$ 5.000,00</div>
   </div>
 
-  <div class="nome">Olá, Rodolfo</div>
-  <div class="saldo">R$ 5.000,00</div>
+  <div class="conteudo">
+
+    <div class="botoes">
+      <div class="botao">
+        <div class="botao-circulo">💸</div>
+        Pix
+      </div>
+
+      <div class="botao">
+        <div class="botao-circulo">💳</div>
+        Pagar
+      </div>
+
+      <div class="botao" onclick="abrirTransferir()">
+        <div class="botao-circulo">🔁</div>
+        Transferir
+      </div>
+
+      <div class="botao">
+        <div class="botao-circulo">🏦</div>
+        Depositar
+      </div>
+    </div>
+
+    <div class="card">Empréstimos - Até R$ 5.000 disponível</div>
+    <div class="card">Investimentos</div>
+    <div class="card">Seguro de vida</div>
+    <div class="card">Descubra mais</div>
+
+  </div>
 </div>
 
-<div class="conteudo">
+<!-- TELA NOME -->
+<div id="transferir" class="tela">
+  <div class="transferir-container">
+    <div class="titulo">Digite o nome do jogador</div>
+    <input type="text" id="nomeJogador" placeholder="Nome ou ID">
+  </div>
 
-  <!-- BOTÕES PRIMEIRO -->
-  <div class="botoes">
-    <div class="botao">
-      <div class="botao-circulo">💸</div>
-      Pix
+  <div class="fab" onclick="irParaValor()">➜</div>
+</div>
+
+<!-- TELA VALOR -->
+<div id="valorTela" class="tela">
+
+  <div style="padding:25px">
+    <div class="titulo">Qual é o valor da transferência?</div>
+    <div style="color:gray;margin-bottom:20px;">
+      Saldo disponível: <span id="saldoInfo"></span>
     </div>
 
-    <div class="botao">
-      <div class="botao-circulo">💳</div>
-      Pagar
-    </div>
-
-    <div class="botao">
-      <div class="botao-circulo">🔁</div>
-      Transferir
-    </div>
-
-    <div class="botao">
-      <div class="botao-circulo">🏦</div>
-      Depositar
+    <div id="valorDisplay" style="font-size:40px;margin-bottom:100px;">
+      R$ 0,00
     </div>
   </div>
 
-  <!-- APARECE DEPOIS AO ROLAR -->
-  <div class="card">
-    <h3>Empréstimos</h3>
-    <div class="desc">Até R$ 5.000 disponível para você</div>
-  </div>
-
-  <div class="card">
-    <h3>Investimentos</h3>
-    <div class="desc">Conheça nossas opções</div>
-  </div>
-
-  <div class="card">
-    <h3>Seguro de vida</h3>
-    <div class="desc">Proteção completa</div>
-  </div>
-
-  <div class="card">
-    <h3>Descubra mais</h3>
-    <div class="desc">Convide amigos</div>
+  <div class="teclado">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <button onclick="digitar(1)">1</button>
+      <button onclick="digitar(2)">2</button>
+      <button onclick="digitar(3)">3</button>
+      <button onclick="digitar(4)">4</button>
+      <button onclick="digitar(5)">5</button>
+      <button onclick="digitar(6)">6</button>
+      <button onclick="digitar(7)">7</button>
+      <button onclick="digitar(8)">8</button>
+      <button onclick="digitar(9)">9</button>
+      <button onclick="apagar()">⌫</button>
+      <button onclick="digitar(0)">0</button>
+      <button onclick="confirmarTransferencia()">✔</button>
+    </div>
   </div>
 
 </div>
+
+<script>
+
+let saldo = 500000; // em centavos
+let valorDigitado = "";
+let nomeDestino = "";
+
+function formatar(valor){
+  return (valor/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+}
+
+function atualizarSaldo(){
+  document.getElementById("saldoDisplay").innerText = formatar(saldo);
+}
+
+function abrirTransferir(){
+  trocarTela("transferir");
+}
+
+function irParaValor(){
+  let nome = document.getElementById("nomeJogador").value;
+  if(nome.trim() === ""){
+    alert("Digite o nome do jogador");
+    return;
+  }
+  nomeDestino = nome;
+  document.getElementById("saldoInfo").innerText = formatar(saldo);
+  trocarTela("valorTela");
+}
+
+function digitar(num){
+  valorDigitado += num;
+  atualizarValor();
+}
+
+function apagar(){
+  valorDigitado = valorDigitado.slice(0,-1);
+  atualizarValor();
+}
+
+function atualizarValor(){
+  let numero = parseInt(valorDigitado || 0);
+  document.getElementById("valorDisplay").innerText = formatar(numero);
+}
+
+function confirmarTransferencia(){
+  let valor = parseInt(valorDigitado || 0);
+
+  if(valor <= 0){
+    alert("Digite um valor válido");
+    return;
+  }
+
+  if(valor > saldo){
+    alert("Saldo insuficiente");
+    return;
+  }
+
+  saldo -= valor;
+  atualizarSaldo();
+
+  alert("Transferência enviada para " + nomeDestino + " no valor de " + formatar(valor));
+
+  valorDigitado = "";
+  document.getElementById("valorDisplay").innerText = "R$ 0,00";
+  document.getElementById("nomeJogador").value = "";
+  trocarTela("home");
+}
+
+function trocarTela(id){
+  document.querySelectorAll(".tela").forEach(t=>t.classList.remove("ativa"));
+  document.getElementById(id).classList.add("ativa");
+}
+
+atualizarSaldo();
+
+</script>
 
 </body>
-</html>
+  </html>
