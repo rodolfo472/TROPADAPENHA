@@ -1,194 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Banco dos Cria</title>
 
 <style>
-body{
+*{
   margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:#f2f4f8;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
 }
 
+body{
+  background:#f2f2f2;
+  overflow-x:hidden;
+}
+
+/* PARTE DE CIMA */
 .topo{
-  background:linear-gradient(180deg,#0066ff,#00aaff);
+  height:300px;
+  background: linear-gradient(180deg, #5a2df0, #7b3cff);
   color:white;
   padding:20px;
-  border-bottom-left-radius:25px;
-  border-bottom-right-radius:25px;
+  position:relative;
 }
 
-.logo{
-  font-size:22px;
-  font-weight:bold;
+.menu{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:white;
+}
+
+.saldo-box{
+  margin-top:20px;
 }
 
 .saldo{
-  margin-top:20px;
-  font-size:26px;
+  font-size:28px;
   font-weight:bold;
+  margin-top:10px;
 }
 
-.container{
-  padding:15px;
-}
-
-.card{
+/* PARTE BRANCA QUE SOBE */
+.conteudo{
   background:white;
-  border-radius:20px;
-  padding:15px;
-  margin-top:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.08);
+  margin-top:-80px;
+  border-top-left-radius:25px;
+  border-top-right-radius:25px;
+  padding:20px;
+  min-height:100vh;
 }
 
 .botoes{
   display:flex;
-  justify-content:space-between;
-  margin-top:15px;
+  justify-content:space-around;
+  margin-top:10px;
 }
 
 .botao{
-  width:22%;
-  text-align:center;
-  font-size:14px;
-}
-
-.circle{
-  width:55px;
-  height:55px;
-  background:#e6f0ff;
+  width:65px;
+  height:65px;
+  background:#eee;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  margin:auto;
-  font-size:20px;
-  color:#0066ff;
-}
-
-input,button{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border-radius:12px;
-  border:1px solid #ccc;
-  font-size:16px;
-}
-
-button{
-  background:#0066ff;
-  color:white;
-  border:none;
-}
-
-.hidden{
-  display:none;
+  font-size:12px;
+  text-align:center;
 }
 </style>
 </head>
 <body>
 
-<div id="loginArea" class="container">
-<h2>Banco dos Cria 💙</h2>
-<input id="user" placeholder="Usuário">
-<input id="pass" type="password" placeholder="Senha">
-<button onclick="login()">Entrar</button>
-<button onclick="criarConta()">Criar Conta</button>
-</div>
-
-<div id="app" class="hidden">
-
 <div class="topo">
-<div class="logo">bc</div>
-<div>Olá, <span id="nomeUser"></span></div>
-<div class="saldo">R$ <span id="saldo">0</span></div>
+  <div class="menu">
+    <div>☰</div>
+    <div>Banco dos Cria</div>
+    <div class="avatar"></div>
+  </div>
+
+  <div class="saldo-box">
+    <div>Saldo disponível</div>
+    <div class="saldo">R$ 5.000,00</div>
+  </div>
 </div>
 
-<div class="container">
+<div class="conteudo">
 
-<div class="card">
-<div class="botoes">
-<div class="botao">
-<div class="circle">💸</div>
-Transferir
-</div>
-<div class="botao">
-<div class="circle">👥</div>
-Amigos
-</div>
-<div class="botao">
-<div class="circle">💰</div>
-Caixinha
-</div>
-<div class="botao">
-<div class="circle">⚙</div>
-Menu
-</div>
-</div>
-</div>
-
-<div class="card">
-<h3>Comando Secreto</h3>
-<input id="comando" placeholder="/givemoney 1000">
-<button onclick="executarComando()">Executar</button>
-</div>
+  <div class="botoes">
+    <div class="botao">PIX</div>
+    <div class="botao">Pagar</div>
+    <div class="botao">Transferir</div>
+    <div class="botao">Depositar</div>
+  </div>
 
 </div>
-</div>
-
-<script>
-let usuarioAtual="";
-let saldo=0;
-
-function criarConta(){
-  let u=user.value;
-  let p=pass.value;
-  localStorage.setItem("login_"+u,p);
-  alert("Conta criada!");
-}
-
-function login(){
-  let u=user.value;
-  let p=pass.value;
-
-  if(localStorage.getItem("login_"+u)===p){
-    usuarioAtual=u;
-    saldo=parseInt(localStorage.getItem("saldo_"+u))||0;
-    document.getElementById("loginArea").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-    document.getElementById("nomeUser").innerText=u;
-    atualizarSaldo();
-  }else{
-    alert("Login inválido");
-  }
-}
-
-function atualizarSaldo(){
-  document.getElementById("saldo").innerText=saldo;
-  localStorage.setItem("saldo_"+usuarioAtual,saldo);
-}
-
-function executarComando(){
-  let cmd=document.getElementById("comando").value;
-
-  if(usuarioAtual==="Rodolfo" && 
-     localStorage.getItem("login_Rodolfo")==="rodolfo408*"){
-
-    if(cmd.startsWith("/givemoney")){
-      let valor=parseInt(cmd.split(" ")[1]);
-      if(!isNaN(valor)){
-        saldo+=valor;
-        atualizarSaldo();
-        alert("Dinheiro adicionado 💙");
-      }
-    }
-
-  }else{
-    alert("Sem permissão");
-  }
-}
-</script>
 
 </body>
 </html>
