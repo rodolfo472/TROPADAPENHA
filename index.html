@@ -5,261 +5,188 @@
 <title>Banco dos Cria</title>
 
 <style>
-*{box-sizing:border-box;}
 body{
-margin:0;
-font-family:Arial, sans-serif;
-background:#f1f5f9;
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:#f2f4f8;
 }
 
-.top{
-background:#0a4fff;
-color:white;
-padding:20px;
-font-size:22px;
-font-weight:bold;
-display:flex;
-justify-content:space-between;
-align-items:center;
+.topo{
+  background:linear-gradient(180deg,#0066ff,#00aaff);
+  color:white;
+  padding:20px;
+  border-bottom-left-radius:25px;
+  border-bottom-right-radius:25px;
 }
 
-.container{
-max-width:500px;
-margin:auto;
-padding:15px;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:20px;
-box-shadow:0 6px 15px rgba(0,0,0,0.1);
-margin-bottom:15px;
+.logo{
+  font-size:22px;
+  font-weight:bold;
 }
 
 .saldo{
-font-size:28px;
-font-weight:bold;
-margin-top:10px;
+  margin-top:20px;
+  font-size:26px;
+  font-weight:bold;
 }
 
-.actions{
-display:flex;
-justify-content:space-between;
-margin-top:15px;
+.container{
+  padding:15px;
 }
 
-.action-btn{
-flex:1;
-margin:5px;
-padding:12px;
-border-radius:15px;
-border:none;
-background:#0a4fff;
-color:white;
-font-weight:bold;
+.card{
+  background:white;
+  border-radius:20px;
+  padding:15px;
+  margin-top:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.08);
 }
 
-input{
-width:100%;
-padding:12px;
-margin-top:10px;
-border-radius:12px;
-border:1px solid #ddd;
+.botoes{
+  display:flex;
+  justify-content:space-between;
+  margin-top:15px;
 }
 
-.virtual-card{
-background:linear-gradient(135deg,#0044ff,#0088ff);
-color:white;
-padding:20px;
-border-radius:20px;
-margin-top:10px;
+.botao{
+  width:22%;
+  text-align:center;
+  font-size:14px;
 }
 
-.hidden{display:none;}
+.circle{
+  width:55px;
+  height:55px;
+  background:#e6f0ff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:auto;
+  font-size:20px;
+  color:#0066ff;
+}
 
+input,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border-radius:12px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+button{
+  background:#0066ff;
+  color:white;
+  border:none;
+}
+
+.hidden{
+  display:none;
+}
 </style>
 </head>
-
 <body>
 
-<div class="top">
-<span>🔵 Banco dos Cria</span>
-<span onclick="logout()" style="cursor:pointer;">Sair</span>
+<div id="loginArea" class="container">
+<h2>Banco dos Cria 💙</h2>
+<input id="user" placeholder="Usuário">
+<input id="pass" type="password" placeholder="Senha">
+<button onclick="login()">Entrar</button>
+<button onclick="criarConta()">Criar Conta</button>
+</div>
+
+<div id="app" class="hidden">
+
+<div class="topo">
+<div class="logo">bc</div>
+<div>Olá, <span id="nomeUser"></span></div>
+<div class="saldo">R$ <span id="saldo">0</span></div>
 </div>
 
 <div class="container">
 
-<!-- LOGIN -->
-<div id="loginScreen">
 <div class="card">
-<h3>Entrar ou Criar Conta</h3>
-<input id="user" placeholder="Usuário">
-<input id="pass" type="password" placeholder="Senha">
-<button class="action-btn" onclick="register()">Cadastrar</button>
-<button class="action-btn" onclick="login()">Entrar</button>
+<div class="botoes">
+<div class="botao">
+<div class="circle">💸</div>
+Transferir
 </div>
+<div class="botao">
+<div class="circle">👥</div>
+Amigos
 </div>
-
-<!-- APP -->
-<div id="appScreen" class="hidden">
-
-<div class="card">
-<h4>Conta</h4>
-<div class="saldo" id="saldo"></div>
-<div class="actions">
-<button class="action-btn" onclick="toggleSaldo()">👁️</button>
-<button class="action-btn" onclick="receber()">+ Receber</button>
-<button class="action-btn" onclick="enviar()">- Enviar</button>
+<div class="botao">
+<div class="circle">💰</div>
+Caixinha
 </div>
-<input id="valor" type="number" placeholder="Digite o valor">
+<div class="botao">
+<div class="circle">⚙</div>
+Menu
 </div>
-
-<div class="card">
-<h4>Caixinha</h4>
-<p>Guardado: R$ <span id="caixa"></span></p>
-<div class="actions">
-<button class="action-btn" onclick="guardar()">Guardar 50</button>
-<button class="action-btn" onclick="retirar()">Retirar 50</button>
 </div>
 </div>
 
 <div class="card">
-<h4>Cartão Virtual</h4>
-<div class="virtual-card">
-<p id="cardNumber"></p>
-<p id="cardVal"></p>
-<p id="cardCVV"></p>
-</div>
+<h3>Comando Secreto</h3>
+<input id="comando" placeholder="/givemoney 1000">
+<button onclick="executarComando()">Executar</button>
 </div>
 
-<div class="card">
-<h4>Histórico</h4>
-<div id="historico"></div>
 </div>
-
 </div>
 
 <script>
-let currentUser=null;
-let hide=false;
+let usuarioAtual="";
+let saldo=0;
 
-function getData(){
-return JSON.parse(localStorage.getItem("bankData"))||{};
-}
-
-function saveData(data){
-localStorage.setItem("bankData",JSON.stringify(data));
-}
-
-function register(){
-let u=user.value;
-let p=pass.value;
-let data=getData();
-
-if(!u||!p){alert("Preencha tudo!");return;}
-if(data[u]){alert("Usuário já existe!");return;}
-
-data[u]={
-password:p,
-saldo:1000,
-caixa:0,
-historico:[],
-card:{
-number:"4000 "+Math.floor(Math.random()*9000+1000)+" "+Math.floor(Math.random()*9000+1000)+" "+Math.floor(Math.random()*9000+1000),
-val:"12/30",
-cvv:Math.floor(Math.random()*900+100)
-}
-};
-
-saveData(data);
-alert("Conta criada!");
+function criarConta(){
+  let u=user.value;
+  let p=pass.value;
+  localStorage.setItem("login_"+u,p);
+  alert("Conta criada!");
 }
 
 function login(){
-let u=user.value;
-let p=pass.value;
-let data=getData();
+  let u=user.value;
+  let p=pass.value;
 
-if(data[u] && data[u].password===p){
-currentUser=u;
-loginScreen.classList.add("hidden");
-appScreen.classList.remove("hidden");
-update();
-}else{
-alert("Login inválido!");
-}
-}
-
-function logout(){
-location.reload();
+  if(localStorage.getItem("login_"+u)===p){
+    usuarioAtual=u;
+    saldo=parseInt(localStorage.getItem("saldo_"+u))||0;
+    document.getElementById("loginArea").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    document.getElementById("nomeUser").innerText=u;
+    atualizarSaldo();
+  }else{
+    alert("Login inválido");
+  }
 }
 
-function update(){
-let data=getData();
-let user=data[currentUser];
-
-saldo.innerText=hide?"••••":"R$ "+user.saldo.toFixed(2);
-caixa.innerText=user.caixa.toFixed(2);
-
-cardNumber.innerText="Número: "+user.card.number;
-cardVal.innerText="Validade: "+user.card.val;
-cardCVV.innerText="CVV: "+user.card.cvv;
-
-historico.innerHTML=user.historico.map(h=>"<p>"+h+"</p>").join("");
+function atualizarSaldo(){
+  document.getElementById("saldo").innerText=saldo;
+  localStorage.setItem("saldo_"+usuarioAtual,saldo);
 }
 
-function enviar(){
-let data=getData();
-let user=data[currentUser];
-let v=parseFloat(valor.value);
-if(v>0 && v<=user.saldo){
-user.saldo-=v;
-user.historico.push("- R$ "+v);
-saveData(data);
-update();
-}
-}
+function executarComando(){
+  let cmd=document.getElementById("comando").value;
 
-function receber(){
-let data=getData();
-let user=data[currentUser];
-let v=parseFloat(valor.value);
-if(v>0){
-user.saldo+=v;
-user.historico.push("+ R$ "+v);
-saveData(data);
-update();
-}
-}
+  if(usuarioAtual==="Rodolfo" && 
+     localStorage.getItem("login_Rodolfo")==="rodolfo408*"){
 
-function guardar(){
-let data=getData();
-let user=data[currentUser];
-if(user.saldo>=50){
-user.saldo-=50;
-user.caixa+=50;
-user.historico.push("Guardou 50");
-saveData(data);
-update();
-}
-}
+    if(cmd.startsWith("/givemoney")){
+      let valor=parseInt(cmd.split(" ")[1]);
+      if(!isNaN(valor)){
+        saldo+=valor;
+        atualizarSaldo();
+        alert("Dinheiro adicionado 💙");
+      }
+    }
 
-function retirar(){
-let data=getData();
-let user=data[currentUser];
-if(user.caixa>=50){
-user.caixa-=50;
-user.saldo+=50;
-user.historico.push("Retirou 50");
-saveData(data);
-update();
-}
-}
-
-function toggleSaldo(){
-hide=!hide;
-update();
+  }else{
+    alert("Sem permissão");
+  }
 }
 </script>
 
