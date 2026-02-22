@@ -5,81 +5,96 @@
 <title>RodoBank</title>
 
 <style>
+*{box-sizing:border-box;}
 body{
 margin:0;
-font-family:Arial;
-background:#820ad1;
-color:white;
+font-family:Arial, sans-serif;
+background:#f2f2f2;
 }
 
-.screen{
-display:none;
+.top{
+background:#820ad1;
+color:white;
 padding:20px;
+font-size:22px;
+font-weight:bold;
+text-align:center;
+}
+
+.container{
+max-width:600px;
+margin:auto;
+padding:15px;
 }
 
 .card{
 background:white;
-color:black;
 padding:20px;
-border-radius:20px;
-margin-top:20px;
-box-shadow:0 8px 20px rgba(0,0,0,0.3);
+border-radius:15px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+margin-bottom:15px;
 }
 
 input,button{
-padding:10px;
-margin:5px 0;
 width:100%;
+padding:12px;
+margin-top:10px;
 border-radius:10px;
-border:none;
+border:1px solid #ddd;
+font-size:16px;
 }
 
 button{
 background:#820ad1;
 color:white;
+border:none;
 font-weight:bold;
 }
 
-h2{
-margin-top:0;
-}
+button:active{opacity:0.8;}
+
+.hidden{display:none;}
 
 .virtual-card{
 background:linear-gradient(45deg,#5a00a0,#a020f0);
 color:white;
 padding:20px;
 border-radius:20px;
-margin-top:15px;
+margin-top:10px;
 }
 
-.small-btn{
-width:auto;
-padding:8px 12px;
-margin:5px;
+@media(min-width:900px){
+.container{
+margin-top:40px;
+}
 }
 </style>
 </head>
 
 <body>
 
+<div class="top">💜 RodoBank</div>
+
+<div class="container">
+
 <!-- LOGIN -->
-<div id="login" class="screen">
-<h2>💜 RodoBank</h2>
+<div id="loginScreen">
+<div class="card">
+<h3>Entrar ou Criar Conta</h3>
 <input id="user" placeholder="Usuário">
 <input id="pass" type="password" placeholder="Senha">
 <button onclick="register()">Cadastrar</button>
 <button onclick="login()">Entrar</button>
 </div>
+</div>
 
 <!-- APP -->
-<div id="app" class="screen">
-
-<h2>Conta</h2>
+<div id="appScreen" class="hidden">
 
 <div class="card">
-Saldo:
-<h1 id="saldo"></h1>
-<button class="small-btn" onclick="toggleSaldo()">👁️</button>
+<h3>Saldo</h3>
+<h2 id="saldo"></h2>
+<button onclick="toggleSaldo()">Mostrar/Esconder</button>
 </div>
 
 <div class="card">
@@ -111,7 +126,7 @@ Saldo:
 </div>
 
 <div class="card">
-<h3>Ranking Amigos</h3>
+<h3>Ranking de Usuários</h3>
 <div id="ranking"></div>
 </div>
 
@@ -119,26 +134,29 @@ Saldo:
 
 </div>
 
+</div>
+
 <script>
 let currentUser=null;
 let hide=false;
+
+function getData(){
+return JSON.parse(localStorage.getItem("bankData"))||{};
+}
 
 function saveData(data){
 localStorage.setItem("bankData",JSON.stringify(data));
 }
 
-function loadData(){
-return JSON.parse(localStorage.getItem("bankData"))||{};
-}
-
 function register(){
 let u=user.value;
 let p=pass.value;
-let data=loadData();
-if(data[u]){
-alert("Usuário já existe");
-return;
-}
+let data=getData();
+
+if(!u||!p){alert("Preencha tudo!");return;}
+
+if(data[u]){alert("Usuário já existe!");return;}
+
 data[u]={
 password:p,
 saldo:1000,
@@ -150,6 +168,7 @@ val:"12/30",
 cvv:Math.floor(Math.random()*900+100)
 }
 };
+
 saveData(data);
 alert("Conta criada!");
 }
@@ -157,19 +176,16 @@ alert("Conta criada!");
 function login(){
 let u=user.value;
 let p=pass.value;
-let data=loadData();
-if(data[u]&&data[u].password===p){
-currentUser=u;
-showApp();
-}else{
-alert("Login inválido");
-}
-}
+let data=getData();
 
-function showApp(){
-login.style.display="none";
-app.style.display="block";
+if(data[u] && data[u].password===p){
+currentUser=u;
+loginScreen.classList.add("hidden");
+appScreen.classList.remove("hidden");
 update();
+}else{
+alert("Login inválido!");
+}
 }
 
 function logout(){
@@ -177,26 +193,29 @@ location.reload();
 }
 
 function update(){
-let data=loadData();
+let data=getData();
 let user=data[currentUser];
+
 saldo.innerText=hide?"••••":"R$ "+user.saldo.toFixed(2);
 caixa.innerText=user.caixa.toFixed(2);
+
 cardNumber.innerText="Número: "+user.card.number;
 cardVal.innerText="Validade: "+user.card.val;
 cardCVV.innerText="CVV: "+user.card.cvv;
 
 historico.innerHTML=user.historico.map(h=>"<p>"+h+"</p>").join("");
 
-ranking.innerHTML=Object.keys(data).map(name=>{
-return "<p>"+name+" - R$ "+data[name].saldo.toFixed(2)+"</p>";
-}).join("");
+ranking.innerHTML=Object.keys(data)
+.sort((a,b)=>data[b].saldo-data[a].saldo)
+.map(name=>"<p>"+name+" - R$ "+data[name].saldo.toFixed(2)+"</p>")
+.join("");
 }
 
 function enviar(){
-let data=loadData();
+let data=getData();
 let user=data[currentUser];
 let v=parseFloat(valor.value);
-if(v>0&&v<=user.saldo){
+if(v>0 && v<=user.saldo){
 user.saldo-=v;
 user.historico.push("- R$ "+v);
 saveData(data);
@@ -205,7 +224,7 @@ update();
 }
 
 function receber(){
-let data=loadData();
+let data=getData();
 let user=data[currentUser];
 let v=parseFloat(valor.value);
 if(v>0){
@@ -217,7 +236,7 @@ update();
 }
 
 function guardar(){
-let data=loadData();
+let data=getData();
 let user=data[currentUser];
 if(user.saldo>=50){
 user.saldo-=50;
@@ -229,7 +248,7 @@ update();
 }
 
 function retirar(){
-let data=loadData();
+let data=getData();
 let user=data[currentUser];
 if(user.caixa>=50){
 user.caixa-=50;
@@ -248,8 +267,6 @@ update();
 function generateCard(){
 return "4"+Math.floor(Math.random()*1000000000000000);
 }
-
-login.style.display="block";
 </script>
 
 </body>
