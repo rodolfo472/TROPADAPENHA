@@ -14,14 +14,14 @@
 }
 
 body{
-  background:#f2f2f2;
+  background:#f1f5f9;
   overflow-x:hidden;
 }
 
-/* PARTE DE CIMA */
+/* TOPO AZUL */
 .topo{
-  height:300px;
-  background: linear-gradient(180deg, #5a2df0, #7b3cff);
+  height:320px;
+  background: linear-gradient(180deg, #0f4cff, #2a6bff);
   color:white;
   padding:20px;
   position:relative;
@@ -31,7 +31,6 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:30px;
 }
 
 .avatar{
@@ -41,8 +40,9 @@ body{
   background:white;
 }
 
-.saldo-box{
-  margin-top:20px;
+.nome{
+  margin-top:30px;
+  font-size:18px;
 }
 
 .saldo{
@@ -51,33 +51,61 @@ body{
   margin-top:10px;
 }
 
-/* PARTE BRANCA QUE SOBE */
+/* PARTE BRANCA */
 .conteudo{
   background:white;
-  margin-top:-80px;
-  border-top-left-radius:25px;
-  border-top-right-radius:25px;
+  margin-top:-90px;
+  border-top-left-radius:30px;
+  border-top-right-radius:30px;
   padding:20px;
   min-height:100vh;
 }
 
+/* BOTÕES REDONDOS */
 .botoes{
   display:flex;
   justify-content:space-around;
   margin-top:10px;
+  margin-bottom:25px;
 }
 
 .botao{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  font-size:12px;
+}
+
+.botao-circulo{
   width:65px;
   height:65px;
-  background:#eee;
+  background:#e6ecff;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:12px;
-  text-align:center;
+  margin-bottom:6px;
+  font-size:20px;
 }
+
+/* SEÇÕES */
+.card{
+  background:#f8fafc;
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:15px;
+}
+
+.card h3{
+  font-size:16px;
+  margin-bottom:5px;
+}
+
+.desc{
+  font-size:13px;
+  color:#555;
+}
+
 </style>
 </head>
 <body>
@@ -85,23 +113,61 @@ body{
 <div class="topo">
   <div class="menu">
     <div>☰</div>
-    <div>Banco dos Cria</div>
+    <div></div>
     <div class="avatar"></div>
   </div>
 
-  <div class="saldo-box">
-    <div>Saldo disponível</div>
-    <div class="saldo">R$ 5.000,00</div>
-  </div>
+  <div class="nome">Olá, Rodolfo</div>
+  <div class="saldo">R$ 5.000,00</div>
 </div>
 
 <div class="conteudo">
 
+  <!-- BOTÕES -->
   <div class="botoes">
-    <div class="botao">PIX</div>
-    <div class="botao">Pagar</div>
-    <div class="botao">Transferir</div>
-    <div class="botao">Depositar</div>
+
+    <div class="botao">
+      <div class="botao-circulo">💸</div>
+      Pix
+    </div>
+
+    <div class="botao">
+      <div class="botao-circulo">💳</div>
+      Pagar
+    </div>
+
+    <div class="botao">
+      <div class="botao-circulo">🔁</div>
+      Transferir
+    </div>
+
+    <div class="botao">
+      <div class="botao-circulo">🏦</div>
+      Depositar
+    </div>
+
+  </div>
+
+  <!-- PARTE QUE APARECE AO ROLAR -->
+
+  <div class="card">
+    <h3>Empréstimos</h3>
+    <div class="desc">Até R$ 5.000 disponível para você</div>
+  </div>
+
+  <div class="card">
+    <h3>Investimentos</h3>
+    <div class="desc">Conheça nossas opções de investimento</div>
+  </div>
+
+  <div class="card">
+    <h3>Seguro de vida</h3>
+    <div class="desc">Proteção completa que cabe no bolso</div>
+  </div>
+
+  <div class="card">
+    <h3>Descubra mais</h3>
+    <div class="desc">Convide amigos e ganhe benefícios</div>
   </div>
 
 </div>
