@@ -1,293 +1,255 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Sistema Gamer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RodoBank</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0b1020;color:#fff}
-.screen{display:none;min-height:100vh;align-items:center;justify-content:center}
-.active{display:flex}
-.box{background:#06172f;width:480px;padding:15px;border-radius:12px;text-align:center}
-
-.menu{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
-.menu button{flex:1}
-
-.section{display:none}
-.section.active{display:block}
-
-.avatar{
-  width:100px;height:100px;border-radius:50%;
-  background:#444;margin:10px auto;
-  border:6px solid transparent;
-  overflow:hidden
-}
-.avatar img{width:100%;height:100%;object-fit:cover}
-
-.border{width:50px;height:50px;border-radius:50%;border:5px solid;cursor:pointer}
-.borders,.inventory{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-
-input,button{width:100%;padding:8px;margin-top:6px;border:none;border-radius:5px}
-button{background:#1c4cff;color:#fff}
-
-#admBtn{
-  position:fixed;right:10px;top:50%;
-  transform:translateY(-50%);
-  background:#ff4444;padding:12px;
-  border-radius:10px;display:none;
-  cursor:pointer;z-index:1000
-}
-#admPanel{
-  position:fixed;right:80px;top:50%;
-  transform:translateY(-50%);
-  background:#020a18;padding:15px;
-  width:260px;border-radius:12px;
-  display:none;z-index:1000
+body{
+margin:0;
+font-family:Arial;
+background:#820ad1;
+color:white;
 }
 
-.rank{background:#020a18;padding:8px;margin:6px 0;border-radius:6px}
+.screen{
+display:none;
+padding:20px;
+}
+
+.card{
+background:white;
+color:black;
+padding:20px;
+border-radius:20px;
+margin-top:20px;
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+input,button{
+padding:10px;
+margin:5px 0;
+width:100%;
+border-radius:10px;
+border:none;
+}
+
+button{
+background:#820ad1;
+color:white;
+font-weight:bold;
+}
+
+h2{
+margin-top:0;
+}
+
+.virtual-card{
+background:linear-gradient(45deg,#5a00a0,#a020f0);
+color:white;
+padding:20px;
+border-radius:20px;
+margin-top:15px;
+}
+
+.small-btn{
+width:auto;
+padding:8px 12px;
+margin:5px;
+}
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-<div class="screen active" id="loginScreen">
-  <div class="box">
-    <h2>Login</h2>
-    <input id="loginName" placeholder="Nome">
-    <input id="loginPass" type="password" placeholder="Senha">
-    <button onclick="login()">Entrar</button>
-    <button onclick="goRegister()">Criar conta</button>
-  </div>
+<div id="login" class="screen">
+<h2>💜 RodoBank</h2>
+<input id="user" placeholder="Usuário">
+<input id="pass" type="password" placeholder="Senha">
+<button onclick="register()">Cadastrar</button>
+<button onclick="login()">Entrar</button>
 </div>
 
-<!-- REGISTRO -->
-<div class="screen" id="registerScreen">
-  <div class="box">
-    <h2>Registro</h2>
-    <input id="regName" placeholder="Nome">
-    <input id="regPass" type="password" placeholder="Senha">
-    <button onclick="register()">Registrar</button>
-    <button onclick="backLogin()">Voltar</button>
-  </div>
+<!-- APP -->
+<div id="app" class="screen">
+
+<h2>Conta</h2>
+
+<div class="card">
+Saldo:
+<h1 id="saldo"></h1>
+<button class="small-btn" onclick="toggleSaldo()">👁️</button>
 </div>
 
-<!-- JOGO -->
-<div class="screen" id="gameScreen">
-  <div class="box">
-
-    <div class="menu">
-      <button onclick="openSec('perfil')">Perfil</button>
-      <button onclick="openSec('loja')">Loja</button>
-      <button onclick="openSec('inventario')">Inventário</button>
-      <button onclick="openSec('premium')">Premium</button>
-      <button onclick="openSec('foto')">Foto</button>
-      <button onclick="openSec('ranking')">Ranking</button>
-      <button onclick="openSec('apps')">🎮 Central de Jogos</button>
-    </div>
-
-    <!-- PERFIL -->
-    <div class="section active" id="perfil">
-      <div class="avatar" id="avatar"></div>
-      <h3 id="nome"></h3>
-      <p>💰 Dinheiro do site: <span id="coins"></span></p>
-
-      <input id="valorResgate" type="number" placeholder="Valor para resgatar">
-      <button onclick="resgatar()">💸 Resgatar</button>
-      <p id="msgResgate"></p>
-
-      <p id="status"></p>
-      <p id="device"></p>
-    </div>
-
-    <!-- LOJA -->
-    <div class="section" id="loja">
-      <div class="borders">
-        <div class="border" style="border-color:gold" onclick="buyBorder('gold')"></div>
-        <div class="border" style="border-color:#00aaff" onclick="buyBorder('#00aaff')"></div>
-        <div class="border" style="border-color:#ff4444" onclick="buyBorder('#ff4444')"></div>
-      </div>
-    </div>
-
-    <!-- INVENTÁRIO -->
-    <div class="section" id="inventario">
-      <div class="inventory" id="inv"></div>
-    </div>
-
-    <!-- PREMIUM -->
-    <div class="section" id="premium">
-      <button onclick="buyPremium()">Ativar Premium</button>
-    </div>
-
-    <!-- FOTO -->
-    <div class="section" id="foto">
-      <input type="file" accept="image/*" onchange="setPhoto(event)">
-    </div>
-
-    <!-- RANKING -->
-    <div class="section" id="ranking">
-      <div id="rankList"></div>
-    </div>
-
-  </div>
+<div class="card">
+<h3>Transferência</h3>
+<input id="valor" type="number" placeholder="Valor">
+<button onclick="enviar()">Enviar</button>
+<button onclick="receber()">Receber</button>
 </div>
 
-<!-- ADM -->
-<div id="admBtn" onclick="toggleAdm()">ADM MENU</div>
+<div class="card">
+<h3>Caixinha</h3>
+<p>Guardado: R$ <span id="caixa"></span></p>
+<button onclick="guardar()">Guardar 50</button>
+<button onclick="retirar()">Retirar 50</button>
+</div>
 
-<div id="admPanel">
-  <h3>👑 PAINEL ADM</h3>
+<div class="card">
+<h3>Cartão Virtual</h3>
+<div class="virtual-card">
+<p id="cardNumber"></p>
+<p id="cardVal"></p>
+<p id="cardCVV"></p>
+</div>
+</div>
 
-  <h4>Dar dinheiro</h4>
-  <input id="admMoneyName" placeholder="Jogador">
-  <input id="admMoneyValue" type="number" placeholder="Quantia">
-  <button onclick="admGiveMoney()">Enviar dinheiro</button>
+<div class="card">
+<h3>Histórico</h3>
+<div id="historico"></div>
+</div>
 
-  <h4>Dar ADM</h4>
-  <input id="admAdminName" placeholder="Jogador">
-  <input id="admAdminDays" type="number" placeholder="Dias">
-  <button onclick="admGiveAdmin()">Dar ADM</button>
+<div class="card">
+<h3>Ranking Amigos</h3>
+<div id="ranking"></div>
+</div>
 
-  <h4>Gerar código de dinheiro</h4>
-  <input id="moneyValue" type="number" placeholder="Quantia">
-  <button onclick="generateCode()">Gerar Código</button>
-  <p id="moneyCode"></p>
+<button onclick="logout()">Sair</button>
+
 </div>
 
 <script>
-const ADM_NAME="Rodolfo";
-const ADM_PASS="rodolfo408*";
+let currentUser=null;
+let hide=false;
 
-let players=JSON.parse(localStorage.getItem("playersDB")||"[]");
-let moneyCodes=JSON.parse(localStorage.getItem("moneyCodes")||"{}");
-let user=null;
-
-// AUTO LOGIN
-let saved=localStorage.getItem("user");
-if(saved){user=JSON.parse(saved);start();}
-
-function detectDevice(){
-  return /mobile/i.test(navigator.userAgent)?"📱 Mobile":"💻 PC";
+function saveData(data){
+localStorage.setItem("bankData",JSON.stringify(data));
 }
 
-function login(){
-  let n=loginName.value,p=loginPass.value;
-  if(n===ADM_NAME&&p===ADM_PASS){
-    user={name:n,coins:"0",admin:true,premium:false,inventory:[],photo:null,device:detectDevice()};
-    saveAll();start();return;
-  }
-  let u=players.find(x=>x.name===n&&x.pass===p);
-  if(!u){alert("Login inválido");return;}
-  user=u;start();
-}
-
-function goRegister(){
-  loginScreen.classList.remove("active");
-  registerScreen.classList.add("active");
-}
-
-function backLogin(){
-  registerScreen.classList.remove("active");
-  loginScreen.classList.add("active");
+function loadData(){
+return JSON.parse(localStorage.getItem("bankData"))||{};
 }
 
 function register(){
-  if(players.find(x=>x.name===regName.value)){alert("Nome já existe");return;}
-  user={name:regName.value,pass:regPass.value,coins:"0",admin:false,premium:false,inventory:[],photo:null,device:detectDevice()};
-  players.push(user);saveAll();start();
+let u=user.value;
+let p=pass.value;
+let data=loadData();
+if(data[u]){
+alert("Usuário já existe");
+return;
+}
+data[u]={
+password:p,
+saldo:1000,
+caixa:0,
+historico:[],
+card:{
+number:generateCard(),
+val:"12/30",
+cvv:Math.floor(Math.random()*900+100)
+}
+};
+saveData(data);
+alert("Conta criada!");
 }
 
-function start(){
-  loginScreen.classList.remove("active");
-  registerScreen.classList.remove("active");
-  gameScreen.classList.add("active");
-
-  nome.innerText=user.name;
-  coins.innerText=user.coins;
-  status.innerText=user.admin?"👑 ADM":user.premium?"💎 Premium":"Jogador";
-  device.innerText=user.device;
-
-  if(user.photo) avatar.innerHTML=`<img src="${user.photo}">`;
-  if(user.equipped) avatar.style.borderColor=user.equipped;
-  if(user.admin) admBtn.style.display="block";
-
-  saveAll();
+function login(){
+let u=user.value;
+let p=pass.value;
+let data=loadData();
+if(data[u]&&data[u].password===p){
+currentUser=u;
+showApp();
+}else{
+alert("Login inválido");
+}
 }
 
-function openSec(id){
-  if(id==="apps"){window.location.href="painel.html";return;}
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  if(id==="inventario") renderInv();
-  if(id==="ranking") renderRank();
+function showApp(){
+login.style.display="none";
+app.style.display="block";
+update();
 }
 
-function buyBorder(c){if(!user.inventory.includes(c))user.inventory.push(c);equip(c)}
-function equip(c){user.equipped=c;avatar.style.borderColor=c;saveAll()}
-function renderInv(){
-  inv.innerHTML="";
-  user.inventory.forEach(b=>{
-    let d=document.createElement("div");
-    d.className="border";d.style.borderColor=b;
-    d.onclick=()=>equip(b);inv.appendChild(d);
-  });
+function logout(){
+location.reload();
 }
 
-function buyPremium(){user.premium=true;saveAll()}
+function update(){
+let data=loadData();
+let user=data[currentUser];
+saldo.innerText=hide?"••••":"R$ "+user.saldo.toFixed(2);
+caixa.innerText=user.caixa.toFixed(2);
+cardNumber.innerText="Número: "+user.card.number;
+cardVal.innerText="Validade: "+user.card.val;
+cardCVV.innerText="CVV: "+user.card.cvv;
 
-function setPhoto(e){
-  let r=new FileReader();
-  r.onload=()=>{user.photo=r.result;avatar.innerHTML=`<img src="${r.result}">`;saveAll()}
-  r.readAsDataURL(e.target.files[0]);
-}
+historico.innerHTML=user.historico.map(h=>"<p>"+h+"</p>").join("");
 
-function resgatar(){
-  let msg=msgResgate;
-  let v=valorResgate.value;
-  let saldo=BigInt(user.coins);
-  if(!v||BigInt(v)<=0n){msg.innerText="Digite um valor válido";return;}
-  if(BigInt(v)>saldo){msg.innerText="Você não tem dinheiro suficiente.";return;}
-  user.coins=(saldo-BigInt(v)).toString();
-  coins.innerText=user.coins;
-  msg.style.color="lime";
-  msg.innerText="Robux foi resgatado para sua conta, chegará daqui a um ano.";
-  saveAll();
+ranking.innerHTML=Object.keys(data).map(name=>{
+return "<p>"+name+" - R$ "+data[name].saldo.toFixed(2)+"</p>";
+}).join("");
 }
 
-function toggleAdm(){admPanel.style.display=admPanel.style.display==="block"?"none":"block"}
-function admGiveMoney(){
-  let p=players.find(x=>x.name===admMoneyName.value);
-  if(!p){alert("Jogador não encontrado");return;}
-  p.coins=(BigInt(p.coins)+BigInt(admMoneyValue.value)).toString();
-  saveAll();alert("Dinheiro enviado");
+function enviar(){
+let data=loadData();
+let user=data[currentUser];
+let v=parseFloat(valor.value);
+if(v>0&&v<=user.saldo){
+user.saldo-=v;
+user.historico.push("- R$ "+v);
+saveData(data);
+update();
 }
-function admGiveAdmin(){
-  let p=players.find(x=>x.name===admAdminName.value);
-  if(!p){alert("Jogador não encontrado");return;}
-  p.admin=true;p.adminUntil=Date.now()+admAdminDays.value*86400000;
-  saveAll();alert("ADM concedido");
-}
-function generateCode(){
-  let c="DIN-"+Math.random().toString(36).substr(2,6).toUpperCase();
-  moneyCodes[c]=moneyValue.value;
-  moneyCode.innerText=c;
-  saveAll();
 }
 
-function renderRank(){
-  rankList.innerHTML="";
-  [...players].sort((a,b)=>BigInt(b.coins)-BigInt(a.coins))
-    .forEach((p,i)=>rankList.innerHTML+=`<div class="rank">${i+1}º ${p.name} - 💰 ${p.coins}</div>`);
+function receber(){
+let data=loadData();
+let user=data[currentUser];
+let v=parseFloat(valor.value);
+if(v>0){
+user.saldo+=v;
+user.historico.push("+ R$ "+v);
+saveData(data);
+update();
+}
 }
 
-function saveAll(){
-  let i=players.findIndex(p=>p.name===user.name);
-  if(i>=0) players[i]=user; else players.push(user);
-  localStorage.setItem("playersDB",JSON.stringify(players));
-  localStorage.setItem("user",JSON.stringify(user));
-  localStorage.setItem("moneyCodes",JSON.stringify(moneyCodes));
+function guardar(){
+let data=loadData();
+let user=data[currentUser];
+if(user.saldo>=50){
+user.saldo-=50;
+user.caixa+=50;
+user.historico.push("Guardou 50");
+saveData(data);
+update();
 }
+}
+
+function retirar(){
+let data=loadData();
+let user=data[currentUser];
+if(user.caixa>=50){
+user.caixa-=50;
+user.saldo+=50;
+user.historico.push("Retirou 50");
+saveData(data);
+update();
+}
+}
+
+function toggleSaldo(){
+hide=!hide;
+update();
+}
+
+function generateCard(){
+return "4"+Math.floor(Math.random()*1000000000000000);
+}
+
+login.style.display="block";
 </script>
 
 </body>
