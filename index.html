@@ -15,16 +15,14 @@
 
 body{
   background:#f1f5f9;
-  overflow-x:hidden;
 }
 
-/* TOPO AZUL */
+/* TOPO FIXO */
 .topo{
-  height:320px;
+  height:380px;
   background: linear-gradient(180deg, #0f4cff, #2a6bff);
   color:white;
-  padding:20px;
-  position:relative;
+  padding:25px;
 }
 
 .menu{
@@ -34,71 +32,69 @@ body{
 }
 
 .avatar{
-  width:40px;
-  height:40px;
+  width:45px;
+  height:45px;
   border-radius:50%;
   background:white;
 }
 
 .nome{
-  margin-top:30px;
+  margin-top:40px;
   font-size:18px;
 }
 
 .saldo{
-  font-size:28px;
+  font-size:32px;
   font-weight:bold;
   margin-top:10px;
 }
 
-/* PARTE BRANCA */
+/* CONTAINER BRANCO */
 .conteudo{
   background:white;
-  margin-top:-90px;
+  margin-top:-120px;
   border-top-left-radius:30px;
   border-top-right-radius:30px;
-  padding:20px;
+  padding:25px 20px 40px 20px;
   min-height:100vh;
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
 }
 
-/* BOTÕES REDONDOS */
+/* BOTÕES */
 .botoes{
   display:flex;
-  justify-content:space-around;
-  margin-top:10px;
-  margin-bottom:25px;
+  justify-content:space-between;
+  margin-bottom:30px;
 }
 
 .botao{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  font-size:12px;
+  text-align:center;
+  font-size:13px;
 }
 
 .botao-circulo{
-  width:65px;
-  height:65px;
-  background:#e6ecff;
+  width:70px;
+  height:70px;
   border-radius:50%;
+  background:#e6ecff;
   display:flex;
   align-items:center;
   justify-content:center;
-  margin-bottom:6px;
-  font-size:20px;
+  font-size:22px;
+  margin-bottom:8px;
 }
 
-/* SEÇÕES */
+/* CARDS */
 .card{
   background:#f8fafc;
-  padding:15px;
-  border-radius:15px;
+  padding:18px;
+  border-radius:18px;
   margin-bottom:15px;
 }
 
 .card h3{
   font-size:16px;
-  margin-bottom:5px;
+  margin-bottom:6px;
 }
 
 .desc{
@@ -123,9 +119,8 @@ body{
 
 <div class="conteudo">
 
-  <!-- BOTÕES -->
+  <!-- BOTÕES PRIMEIRO -->
   <div class="botoes">
-
     <div class="botao">
       <div class="botao-circulo">💸</div>
       Pix
@@ -145,11 +140,9 @@ body{
       <div class="botao-circulo">🏦</div>
       Depositar
     </div>
-
   </div>
 
-  <!-- PARTE QUE APARECE AO ROLAR -->
-
+  <!-- APARECE DEPOIS AO ROLAR -->
   <div class="card">
     <h3>Empréstimos</h3>
     <div class="desc">Até R$ 5.000 disponível para você</div>
@@ -157,17 +150,17 @@ body{
 
   <div class="card">
     <h3>Investimentos</h3>
-    <div class="desc">Conheça nossas opções de investimento</div>
+    <div class="desc">Conheça nossas opções</div>
   </div>
 
   <div class="card">
     <h3>Seguro de vida</h3>
-    <div class="desc">Proteção completa que cabe no bolso</div>
+    <div class="desc">Proteção completa</div>
   </div>
 
   <div class="card">
     <h3>Descubra mais</h3>
-    <div class="desc">Convide amigos e ganhe benefícios</div>
+    <div class="desc">Convide amigos</div>
   </div>
 
 </div>
