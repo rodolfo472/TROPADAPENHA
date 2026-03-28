@@ -1,219 +1,144 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Marketplace Gamer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Mercadao do rodrigao saminny peidao</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: white;
-    }
+<style>
+body {
+  margin:0;
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
+}
 
-    header {
-      background: #020617;
-      padding: 15px;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-    }
+header {
+  background:#020617;
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+}
 
-    .search {
-      padding: 15px;
-      text-align: center;
-    }
+.container {
+  padding:15px;
+}
 
-    input {
-      width: 80%;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      font-size: 16px;
-    }
+input {
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border:none;
+  border-radius:10px;
+}
 
-    .games {
-      display: flex;
-      overflow-x: auto;
-      gap: 10px;
-      padding: 10px;
-    }
+button {
+  width:100%;
+  padding:12px;
+  background:#6366f1;
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-weight:bold;
+  margin-top:5px;
+}
 
-    .game {
-      background: #1e293b;
-      padding: 10px 15px;
-      border-radius: 12px;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: 0.3s;
-    }
+.card {
+  background:#1e293b;
+  padding:10px;
+  border-radius:10px;
+  margin-top:10px;
+}
 
-    .game:hover {
-      background: #6366f1;
-    }
+.price {
+  color:#22c55e;
+}
 
-    .container {
-      padding: 15px;
-    }
-
-    .card {
-      background: #1e293b;
-      border-radius: 15px;
-      padding: 12px;
-      margin-bottom: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    }
-
-    .card img {
-      width: 100%;
-      border-radius: 10px;
-    }
-
-    .price {
-      color: #22c55e;
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    button {
-      background: #6366f1;
-      border: none;
-      padding: 12px;
-      width: 100%;
-      border-radius: 12px;
-      color: white;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-
-    button:hover {
-      background: #4f46e5;
-    }
-
-    /* POPUP */
-    .popup {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #020617;
-      padding: 20px;
-      display: none;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      box-shadow: 0 -5px 20px rgba(0,0,0,0.7);
-    }
-
-    .popup h3 {
-      margin-top: 0;
-    }
-
-    .close {
-      background: red;
-      margin-top: 10px;
-    }
-  </style>
+.popup {
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#020617;
+  padding:20px;
+  display:none;
+}
+</style>
 </head>
 
 <body>
 
 <header>🔥 Marketplace Gamer</header>
 
-<div class="search">
-  <input type="text" id="search" placeholder="Buscar jogo...">
+<div class="container">
+
+<h3>Criar anúncio</h3>
+
+<input id="nome" placeholder="Nome do anúncio">
+<input id="jogo" placeholder="Jogo (ex: Blox Fruits, Steal a Brainrot)">
+<input id="preco" placeholder="Preço">
+<input id="contato" placeholder="Contato (WhatsApp, Insta...)">
+
+<button onclick="criar()">Publicar</button>
+
+<h3>Anúncios</h3>
+<div id="lista"></div>
+
 </div>
 
-<div class="games">
-  <div class="game" onclick="filtrar('Blox Fruits')">Blox Fruits</div>
-  <div class="game" onclick="filtrar('Brookhaven')">Brookhaven</div>
-  <div class="game" onclick="filtrar('Adopt Me')">Adopt Me</div>
-  <div class="game" onclick="filtrar('Steal a Brainrot')">Steal a Brainrot</div>
-</div>
-
-<div class="container" id="products"></div>
-
-<!-- POPUP -->
 <div class="popup" id="popup">
-  <h3>Contato do vendedor</h3>
+  <h3>Contato</h3>
   <p id="info"></p>
-  <button class="close" onclick="fechar()">Fechar</button>
+  <button onclick="fechar()">Fechar</button>
 </div>
 
 <script>
-  const anuncios = [
-    {
-      jogo: "Blox Fruits",
-      nome: "Conta nível alto",
-      preco: "R$ 50",
-      img: "https://via.placeholder.com/300",
-      contato: "Instagram: @player1"
-    },
-    {
-      jogo: "Brookhaven",
-      nome: "Casa rara",
-      preco: "R$ 20",
-      img: "https://via.placeholder.com/300",
-      contato: "WhatsApp: 99999-9999"
-    },
-    {
-      jogo: "Adopt Me",
-      nome: "Pet lendário",
-      preco: "R$ 30",
-      img: "https://via.placeholder.com/300",
-      contato: "Email: player@email.com"
-    },
-    {
-      jogo: "Steal a Brainrot",
-      nome: "Conta com Brainrots raros",
-      preco: "R$ 40",
-      img: "https://via.placeholder.com/300",
-      contato: "Instagram: @brainrotplayer"
-    }
-  ];
+let anuncios = JSON.parse(localStorage.getItem("anuncios")) || [];
 
-  function mostrar(lista) {
-    const container = document.getElementById("products");
-    container.innerHTML = "";
+function salvar(){
+  localStorage.setItem("anuncios", JSON.stringify(anuncios));
+}
 
-    lista.forEach(item => {
-      container.innerHTML += `
-        <div class="card">
-          <img src="${item.img}">
-          <h3>${item.nome}</h3>
-          <p>${item.jogo}</p>
-          <p class="price">${item.preco}</p>
-          <button onclick="negociar('${item.contato}')">Negociar</button>
-        </div>
-      `;
-    });
-  }
+function criar(){
+  const nome = document.getElementById("nome").value;
+  const jogo = document.getElementById("jogo").value;
+  const preco = document.getElementById("preco").value;
+  const contato = document.getElementById("contato").value;
 
-  function filtrar(jogo) {
-    const filtrados = anuncios.filter(a => a.jogo === jogo);
-    mostrar(filtrados);
-  }
+  const novo = {nome, jogo, preco, contato};
+  anuncios.push(novo);
 
-  function negociar(contato) {
-    document.getElementById("popup").style.display = "block";
-    document.getElementById("info").innerText = contato;
-  }
+  salvar();
+  mostrar();
+}
 
-  function fechar() {
-    document.getElementById("popup").style.display = "none";
-  }
+function mostrar(){
+  let html = "";
 
-  document.getElementById("search").addEventListener("input", function(e) {
-    const valor = e.target.value.toLowerCase();
-    const filtrados = anuncios.filter(a =>
-      a.jogo.toLowerCase().includes(valor)
-    );
-    mostrar(filtrados);
+  anuncios.forEach(a => {
+    html += `
+      <div class="card">
+        <b>${a.nome}</b><br>
+        ${a.jogo}<br>
+        <span class="price">${a.preco}</span><br>
+        <button onclick="negociar('${a.contato}')">Negociar</button>
+      </div>
+    `;
   });
 
-  mostrar(anuncios);
+  document.getElementById("lista").innerHTML = html;
+}
+
+function negociar(contato){
+  document.getElementById("popup").style.display = "block";
+  document.getElementById("info").innerText = contato;
+}
+
+function fechar(){
+  document.getElementById("popup").style.display = "none";
+}
+
+mostrar();
 </script>
 
 </body>
