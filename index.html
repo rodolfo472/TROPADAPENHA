@@ -1,293 +1,220 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Banco dos Cria</title>
+  <meta charset="UTF-8">
+  <title>Marketplace Gamer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: white;
+    }
 
-body{
-  background:#f1f5f9;
-}
+    header {
+      background: #020617;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
 
-/* TELAS */
-.tela{ display:none; }
-.tela.ativa{ display:block; }
+    .search {
+      padding: 15px;
+      text-align: center;
+    }
 
-/* TOPO */
-.topo{
-  height:360px;
-  background: linear-gradient(180deg, #0f4cff, #2a6bff);
-  color:white;
-  padding:25px;
-}
+    input {
+      width: 80%;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      font-size: 16px;
+    }
 
-.nome{ margin-top:40px; font-size:18px; }
-.saldo{ font-size:32px; font-weight:bold; margin-top:10px; }
+    .games {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding: 10px;
+    }
 
-/* CONTEUDO */
-.conteudo{
-  background:white;
-  margin-top:-120px;
-  border-top-left-radius:30px;
-  border-top-right-radius:30px;
-  padding:25px;
-  min-height:100vh;
-}
+    .game {
+      background: #1e293b;
+      padding: 10px 15px;
+      border-radius: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.3s;
+    }
 
-/* BOTÕES */
-.botoes{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:30px;
-}
+    .game:hover {
+      background: #6366f1;
+    }
 
-.botao{
-  text-align:center;
-  font-size:13px;
-  cursor:pointer;
-}
+    .container {
+      padding: 15px;
+    }
 
-.botao-circulo{
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  background:#e6ecff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  margin-bottom:8px;
-}
+    .card {
+      background: #1e293b;
+      border-radius: 15px;
+      padding: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
 
-/* CARDS */
-.card{
-  background:#f8fafc;
-  padding:18px;
-  border-radius:18px;
-  margin-bottom:15px;
-}
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+    }
 
-/* TRANSFERIR */
-.transferir-container{
-  padding:25px;
-}
+    .price {
+      color: #22c55e;
+      font-weight: bold;
+      font-size: 18px;
+    }
 
-.titulo{
-  font-size:22px;
-  margin-bottom:20px;
-}
+    button {
+      background: #6366f1;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+    }
 
-input{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-bottom:2px solid #ccc;
-  font-size:16px;
-  outline:none;
-}
+    button:hover {
+      background: #4f46e5;
+    }
 
-/* BOTÃO FLUTUANTE */
-.fab{
-  position:fixed;
-  bottom:25px;
-  right:25px;
-  width:65px;
-  height:65px;
-  background:#0f4cff;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:26px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.3);
-  cursor:pointer;
-}
+    /* POPUP */
+    .popup {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #020617;
+      padding: 20px;
+      display: none;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.7);
+    }
 
-/* TECLADO */
-.teclado{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  background:#f1f1f1;
-  padding:10px;
-}
+    .popup h3 {
+      margin-top: 0;
+    }
 
-.teclado button{
-  padding:18px;
-  font-size:18px;
-}
-</style>
+    .close {
+      background: red;
+      margin-top: 10px;
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- HOME -->
-<div id="home" class="tela ativa">
+<header>🔥 Marketplace Gamer</header>
 
-  <div class="topo">
-    <div class="nome">Olá, Rodolfo</div>
-    <div class="saldo" id="saldoDisplay">R$ 5.000,00</div>
-  </div>
-
-  <div class="conteudo">
-
-    <div class="botoes">
-      <div class="botao">
-        <div class="botao-circulo">💸</div>
-        Pix
-      </div>
-
-      <div class="botao">
-        <div class="botao-circulo">💳</div>
-        Pagar
-      </div>
-
-      <div class="botao" onclick="abrirTransferir()">
-        <div class="botao-circulo">🔁</div>
-        Transferir
-      </div>
-
-      <div class="botao">
-        <div class="botao-circulo">🏦</div>
-        Depositar
-      </div>
-    </div>
-
-    <div class="card">Empréstimos - Até R$ 5.000 disponível</div>
-    <div class="card">Investimentos</div>
-    <div class="card">Seguro de vida</div>
-    <div class="card">Descubra mais</div>
-
-  </div>
+<div class="search">
+  <input type="text" id="search" placeholder="Buscar jogo...">
 </div>
 
-<!-- TELA NOME -->
-<div id="transferir" class="tela">
-  <div class="transferir-container">
-    <div class="titulo">Digite o nome do jogador</div>
-    <input type="text" id="nomeJogador" placeholder="Nome ou ID">
-  </div>
-
-  <div class="fab" onclick="irParaValor()">➜</div>
+<div class="games">
+  <div class="game" onclick="filtrar('Blox Fruits')">Blox Fruits</div>
+  <div class="game" onclick="filtrar('Brookhaven')">Brookhaven</div>
+  <div class="game" onclick="filtrar('Adopt Me')">Adopt Me</div>
+  <div class="game" onclick="filtrar('Steal a Brainrot')">Steal a Brainrot</div>
 </div>
 
-<!-- TELA VALOR -->
-<div id="valorTela" class="tela">
+<div class="container" id="products"></div>
 
-  <div style="padding:25px">
-    <div class="titulo">Qual é o valor da transferência?</div>
-    <div style="color:gray;margin-bottom:20px;">
-      Saldo disponível: <span id="saldoInfo"></span>
-    </div>
-
-    <div id="valorDisplay" style="font-size:40px;margin-bottom:100px;">
-      R$ 0,00
-    </div>
-  </div>
-
-  <div class="teclado">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-      <button onclick="digitar(1)">1</button>
-      <button onclick="digitar(2)">2</button>
-      <button onclick="digitar(3)">3</button>
-      <button onclick="digitar(4)">4</button>
-      <button onclick="digitar(5)">5</button>
-      <button onclick="digitar(6)">6</button>
-      <button onclick="digitar(7)">7</button>
-      <button onclick="digitar(8)">8</button>
-      <button onclick="digitar(9)">9</button>
-      <button onclick="apagar()">⌫</button>
-      <button onclick="digitar(0)">0</button>
-      <button onclick="confirmarTransferencia()">✔</button>
-    </div>
-  </div>
-
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <h3>Contato do vendedor</h3>
+  <p id="info"></p>
+  <button class="close" onclick="fechar()">Fechar</button>
 </div>
 
 <script>
+  const anuncios = [
+    {
+      jogo: "Blox Fruits",
+      nome: "Conta nível alto",
+      preco: "R$ 50",
+      img: "https://via.placeholder.com/300",
+      contato: "Instagram: @player1"
+    },
+    {
+      jogo: "Brookhaven",
+      nome: "Casa rara",
+      preco: "R$ 20",
+      img: "https://via.placeholder.com/300",
+      contato: "WhatsApp: 99999-9999"
+    },
+    {
+      jogo: "Adopt Me",
+      nome: "Pet lendário",
+      preco: "R$ 30",
+      img: "https://via.placeholder.com/300",
+      contato: "Email: player@email.com"
+    },
+    {
+      jogo: "Steal a Brainrot",
+      nome: "Conta com Brainrots raros",
+      preco: "R$ 40",
+      img: "https://via.placeholder.com/300",
+      contato: "Instagram: @brainrotplayer"
+    }
+  ];
 
-let saldo = 500000; // em centavos
-let valorDigitado = "";
-let nomeDestino = "";
+  function mostrar(lista) {
+    const container = document.getElementById("products");
+    container.innerHTML = "";
 
-function formatar(valor){
-  return (valor/100).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-}
-
-function atualizarSaldo(){
-  document.getElementById("saldoDisplay").innerText = formatar(saldo);
-}
-
-function abrirTransferir(){
-  trocarTela("transferir");
-}
-
-function irParaValor(){
-  let nome = document.getElementById("nomeJogador").value;
-  if(nome.trim() === ""){
-    alert("Digite o nome do jogador");
-    return;
-  }
-  nomeDestino = nome;
-  document.getElementById("saldoInfo").innerText = formatar(saldo);
-  trocarTela("valorTela");
-}
-
-function digitar(num){
-  valorDigitado += num;
-  atualizarValor();
-}
-
-function apagar(){
-  valorDigitado = valorDigitado.slice(0,-1);
-  atualizarValor();
-}
-
-function atualizarValor(){
-  let numero = parseInt(valorDigitado || 0);
-  document.getElementById("valorDisplay").innerText = formatar(numero);
-}
-
-function confirmarTransferencia(){
-  let valor = parseInt(valorDigitado || 0);
-
-  if(valor <= 0){
-    alert("Digite um valor válido");
-    return;
+    lista.forEach(item => {
+      container.innerHTML += `
+        <div class="card">
+          <img src="${item.img}">
+          <h3>${item.nome}</h3>
+          <p>${item.jogo}</p>
+          <p class="price">${item.preco}</p>
+          <button onclick="negociar('${item.contato}')">Negociar</button>
+        </div>
+      `;
+    });
   }
 
-  if(valor > saldo){
-    alert("Saldo insuficiente");
-    return;
+  function filtrar(jogo) {
+    const filtrados = anuncios.filter(a => a.jogo === jogo);
+    mostrar(filtrados);
   }
 
-  saldo -= valor;
-  atualizarSaldo();
+  function negociar(contato) {
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("info").innerText = contato;
+  }
 
-  alert("Transferência enviada para " + nomeDestino + " no valor de " + formatar(valor));
+  function fechar() {
+    document.getElementById("popup").style.display = "none";
+  }
 
-  valorDigitado = "";
-  document.getElementById("valorDisplay").innerText = "R$ 0,00";
-  document.getElementById("nomeJogador").value = "";
-  trocarTela("home");
-}
+  document.getElementById("search").addEventListener("input", function(e) {
+    const valor = e.target.value.toLowerCase();
+    const filtrados = anuncios.filter(a =>
+      a.jogo.toLowerCase().includes(valor)
+    );
+    mostrar(filtrados);
+  });
 
-function trocarTela(id){
-  document.querySelectorAll(".tela").forEach(t=>t.classList.remove("ativa"));
-  document.getElementById(id).classList.add("ativa");
-}
-
-atualizarSaldo();
-
+  mostrar(anuncios);
 </script>
 
 </body>
-  </html>
+</html>
