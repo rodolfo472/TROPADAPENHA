@@ -1,156 +1,153 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gelatina de Rodolfo IA (GPT 5-mini)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial;
-    background: #0f172a;
-    color: white;
+body{
+font-family:Arial;
+background:#ff6f91;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
 }
 
-header {
-    background: #1e293b;
-    padding: 15px;
-    text-align: center;
-    font-size: 20px;
+.chat{
+width:350px;
+height:500px;
+background:white;
+border-radius:15px;
+display:flex;
+flex-direction:column;
+overflow:hidden;
 }
 
-#chat {
-    height: 70vh;
-    overflow-y: auto;
-    padding: 10px;
+.topo{
+background:#ff4f7a;
+color:white;
+padding:15px;
+text-align:center;
+font-weight:bold;
 }
 
-.msg {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 10px;
-    max-width: 80%;
+.mensagens{
+flex:1;
+padding:10px;
+overflow-y:auto;
 }
 
-.user {
-    background: #2563eb;
-    margin-left: auto;
+.msg{
+margin:5px 0;
+padding:10px;
+border-radius:10px;
+max-width:80%;
 }
 
-.bot {
-    background: #334155;
+.user{
+background:#ddd;
+align-self:flex-end;
 }
 
-#inputArea {
-    display: flex;
-    padding: 10px;
-    background: #1e293b;
+.bot{
+background:#ffe0ea;
 }
 
-input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
+.input{
+display:flex;
+border-top:1px solid #ccc;
 }
 
-button {
-    margin-left: 10px;
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    background: #22c55e;
-    color: white;
-    font-weight: bold;
+input{
+flex:1;
+padding:10px;
+border:none;
+outline:none;
+}
+
+button{
+padding:10px;
+background:#ff6f91;
+color:white;
+border:none;
 }
 </style>
 </head>
 
 <body>
 
-<header>🍮 Gelatina de Rodolfo IA (GPT 5-mini)</header>
+<div class="chat">
 
-<div id="chat"></div>
+<div class="topo">
+🍧 Gelatina de Rodolfo IA
+</div>
 
-<div id="inputArea">
-    <input id="input" placeholder="Pergunte qualquer coisa...">
-    <button onclick="enviar()">Enviar</button>
+<div class="mensagens" id="chat"></div>
+
+<div class="input">
+<input id="texto" placeholder="Pergunte algo...">
+<button onclick="enviar()">Enviar</button>
+</div>
+
 </div>
 
 <script>
 
-// Mensagem inicial
-window.onload = () => {
-    addMsg("Olá! 👋 Eu sou a Gelatina de Rodolfo IA (GPT 5-mini) 🍮🤖\n\nSou uma IA avançada pronta para te ajudar com estudos, matemática, programação, ideias e muito mais!\n\n👉 Como posso te ajudar hoje?", "bot");
-};
+function enviar(){
+let texto = document.getElementById("texto").value;
 
-function addMsg(texto, classe) {
-    let chat = document.getElementById("chat");
-    let div = document.createElement("div");
-    div.className = "msg " + classe;
-    div.innerText = texto;
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
+if(!texto) return;
+
+addMsg(texto,"user");
+
+responder(texto.toLowerCase());
+
+document.getElementById("texto").value="";
 }
 
-// IA avançada
-function responder(pergunta) {
-    pergunta = pergunta.toLowerCase();
-
-    // Matemática
-    try {
-        if (pergunta.match(/[0-9+\-*/().]/)) {
-            let conta = pergunta.replace(/[^0-9+\-*/().]/g, "");
-            let resultado = eval(conta);
-            return "📊 Vamos resolver passo a passo:\n\n" +
-                   conta + " = " + resultado + "\n\n✔️ Resultado final: " + resultado;
-        }
-    } catch {}
-
-    // Programação
-    if (pergunta.includes("html")) return "🌐 HTML cria sites.\nExemplo:\n<html>\n  <h1>Meu site</h1>\n</html>";
-    if (pergunta.includes("css")) return "🎨 CSS deixa o site bonito.\nExemplo:\nbody { background: black; }";
-    if (pergunta.includes("javascript")) return "⚡ JavaScript dá vida ao site.\nExemplo:\nalert('Olá!');";
-
-    // Tradução simulada
-    if (pergunta.startsWith("traduza")) {
-        return "🌍 Tradução simulada (para real, precisa de API)";
-    }
-
-    // Jogos
-    if (pergunta.includes("roblox")) return "🎮 Roblox é top! Posso te ajudar a criar scripts.";
-    if (pergunta.includes("minecraft")) return "🧱 Minecraft é sobre construção e sobrevivência.";
-
-    // Estudos
-    if (pergunta.includes("história")) return "📜 História estuda o passado.";
-    if (pergunta.includes("ciência")) return "🔬 Ciência explica o mundo.";
-    if (pergunta.includes("matemática")) return "📊 Matemática envolve números e lógica.";
-
-    // Ideias
-    if (pergunta.includes("ideia")) return "💡 Ideia: criar um jogo com IA inteligente!";
-    if (pergunta.includes("site")) return "🌐 Você pode criar um site de jogos, IA ou estudos!";
-
-    // Ajuda geral
-    if (pergunta.includes("ajuda")) return "Claro! Me diga o que você precisa 😄";
-
-    return "🤖 Entendi!\n\nVou tentar te ajudar da melhor forma possível.\n\n👉 " + pergunta;
+function addMsg(txt,tipo){
+let div = document.createElement("div");
+div.className="msg "+tipo;
+div.innerText=txt;
+chat.appendChild(div);
+chat.scrollTop=chat.scrollHeight;
 }
 
-function enviar() {
-    let input = document.getElementById("input");
-    let texto = input.value;
+function responder(msg){
 
-    if (texto == "") return;
+let resposta = "Não entendi 🤔, pode repetir?";
 
-    addMsg(texto, "user");
+if(msg.includes("preço") || msg.includes("valor")){
+resposta = "💰 Cada gelatina custa em média R$4, podendo ter promoções!";
+}
 
-    setTimeout(() => {
-        let resposta = responder(texto);
-        addMsg(resposta, "bot");
-    }, 500);
+else if(msg.includes("promoção")){
+resposta = "🎁 Temos promoções em dias especiais! Fique de olho 👀";
+}
 
-    input.value = "";
+else if(msg.includes("pedido") || msg.includes("comprar")){
+resposta = "📦 Para pedir, escolha seu sabor e envie o pedido pelo site!";
+}
+
+else if(msg.includes("entrega")){
+resposta = "🚚 Fazemos entrega na sua região! Informe sua rua no pedido.";
+}
+
+else if(msg.includes("onde") || msg.includes("local")){
+resposta = "📍 Estamos em Piranhas - Alagoas!";
+}
+
+else if(msg.includes("nome")){
+resposta = "🍧 Somos a Gelatina de Rodolfo IA (GPT 5-mini)!";
+}
+
+setTimeout(()=>{
+addMsg(resposta,"bot");
+},500);
+
 }
 
 </script>
